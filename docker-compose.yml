@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  client:
+    build:
+      context: ./opcua_client
+      dockerfile: Dockerfile
+    entrypoint: ['/usr/src/client/entrypoint.sh']
+    volumes:
+      - '.:/usr/src/app'
+    environment:
+      - HOST=opc.tcp://server:4840/freeopcua/server/
+    depends_on:
+      - server
+
+  server:
+    build:
+      context: ./opcua_server
+      dockerfile: Dockerfile
+    volumes:
+      - '.:/usr/src/app'
+    ports:
+      - 4840:4840
+    environment:
+      - SERVER=opc.tcp://0.0.0.0:4840/freeopcua/server/
